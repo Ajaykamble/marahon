@@ -3,7 +3,7 @@
 class AppConstant {
   AppConstant._();
   static const String FONT_FAMILY = "Inter";
-  
+  static const String APP_NAME = "Marathon";
   static const String TITLE_BUTTON_NEXT = "NEXT";
   static const String CANCEL_BUTTON_NEXT = "CANCEL";
   static const String OK_BUTTON_NEXT = "OK";
