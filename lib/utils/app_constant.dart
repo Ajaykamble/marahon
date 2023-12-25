@@ -16,5 +16,7 @@ class AppConstant {
   static String get ERROR_NO_ITEMS => "NO ITEMS FOUND";
 
   
+  //shared preference keys
+  static const String TRACKING_ID = "trackingId";
 
 }

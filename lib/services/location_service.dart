@@ -184,7 +184,7 @@ class LocationService {
       case LocationPermissionStatus.WHILE_IN_USE:
         return await CommonFunctions.openDialog(
           context: context,
-          action: (context) {
+          action: (context) async{
             CommonFunctions.openAppSettings();
             Navigator.pop(context);
           },

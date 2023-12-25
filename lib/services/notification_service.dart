@@ -15,7 +15,7 @@ class NotificationService {
 
   Future<void> init() async {
     await _createNotificationChannel();
-    await initializeNotification();
+    initializeNotification();
   }
 
   Future<bool?> requestPermission() async {

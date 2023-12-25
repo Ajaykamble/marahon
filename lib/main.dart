@@ -11,9 +11,15 @@ import 'package:geolocator/geolocator.dart';
 import 'package:marathon/config/theme/app_theme.dart';
 import 'package:marathon/firebase_options.dart';
 import 'package:marathon/screen/home_screen.dart';
+import 'package:marathon/screen/splash_screen.dart';
 import 'package:marathon/services/background_service.dart';
+import 'package:marathon/services/local_db_service.dart';
 import 'package:marathon/services/location_service.dart';
 import 'package:marathon/services/notification_service.dart';
+import 'package:marathon/services/user/user_service.dart';
+import 'package:marathon/utils/app_constant.dart';
+import 'package:marathon/utils/app_values.dart';
+import 'package:marathon/viewModel/homeProvider.dart';
 import 'package:marathon/viewModel/userProvider.dart';
 import 'package:provider/provider.dart';
 
@@ -23,26 +29,33 @@ void onStart(ServiceInstance service) async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
+  await LocalDbService().init();
   service.on("stop").listen((event) async {
     await service.stopSelf();
   });
-  log("called");
-  print("Called");
-  Timer.periodic(Duration(seconds: 10), (timer) async {
+
+  Timer.periodic(const Duration(seconds: 10), (timer) async {
     Position position = await Geolocator.getCurrentPosition();
-
-    final DatabaseReference databaseReference = FirebaseDatabase.instance.ref();
-
-    // Store location data in Firebase Realtime Database
-    databaseReference.child('locations').push().set({
-      'latitude': position.latitude,
-      'longitude': position.longitude,
-      'timestamp': DateTime.now().toUtc().toString(),
-    }).then((_) {
-      log('Location data stored successfully');
-    }).catchError((error) {
-      log('Failed to store location data: $error');
-    });
+    log("message: ${position.latitude} ${position.longitude}");
+    bool isLoggedIn = LocalDbService.db.isSignedIn();
+    if (isLoggedIn) {
+      String? trackingId = LocalDbService.db.getDetails(AppConstant.TRACKING_ID);
+      String? userId = UserProvider().userDetail?.userid;
+      String marathonId = "1";
+      if (trackingId != null && userId != null) {
+        try {
+          await UserService().trackLocation(
+            userId: userId,
+            trackingId: trackingId,
+            marathonId: marathonId,
+            latitude: position.latitude,
+            longitude: position.longitude,
+          );
+        } catch (e) {
+          log("error: $e");
+        }
+      }
+    }
   });
 }
 
@@ -51,6 +64,7 @@ Future<void> main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
+  await LocalDbService().init();
   await NotificationService.notificationServiceService.init();
   await BackgroundService().init();
   runApp(const MyApp());
@@ -65,6 +79,8 @@ class MyApp extends StatelessWidget {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => UserProvider()),
+        ChangeNotifierProvider(create: (_) => BackgroundService()),
+        ChangeNotifierProvider(create: (_) => HomeProvider()),
       ],
       builder: (context, child) => Builder(
         builder: (context) {
@@ -73,7 +89,8 @@ class MyApp extends StatelessWidget {
             theme: AppTheme.light(context),
             darkTheme: AppTheme.light(context),
             themeMode: ThemeMode.light,
-            home: HomeScreen(),
+            home: const SplashScreen(),
+            scaffoldMessengerKey: AppValues.scaffoldMessengerKey,
           );
         },
       ),

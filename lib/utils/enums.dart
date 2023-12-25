@@ -1,1 +1,5 @@
 enum LocationPermissionStatus { SERVICE_DISABLED, GRANTED, WHILE_IN_USE, DENIED, FOREVER_DENIED }
+
+enum ApiStatus { LOADING, SUCCESS, ERROR }
+
+enum TextFieldPrefixSuffixType { TEXT, SVG_ASSET, IMAGE_ASSET,WIDGET }

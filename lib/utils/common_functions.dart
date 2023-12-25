@@ -1,9 +1,13 @@
+import 'dart:developer';
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:marathon/utils/app_values.dart';
 import 'package:marathon/widget/custom_alert_dialog.dart';
 
-class CommonFunctions{
-
+class CommonFunctions {
   // open the Location service setting
   static void openLocationSettings() async {
     await Geolocator.openLocationSettings();
@@ -14,6 +18,30 @@ class CommonFunctions{
     await Geolocator.openAppSettings();
   }
 
+  static void toastMessage(String message) {
+    if (Platform.isAndroid || Platform.isIOS) {
+      Fluttertoast.showToast(msg: message, gravity: ToastGravity.BOTTOM, toastLength: Toast.LENGTH_LONG, fontSize: 16.0);
+    } else {
+      showRetrySnackbar(message);
+    }
+  }
+
+  static void showRetrySnackbar([String? message]) {
+    try {
+      if (AppValues.scaffoldMessengerKey.currentState?.mounted ?? false) {
+        AppValues.scaffoldMessengerKey.currentState?.showSnackBar(
+          SnackBar(
+            content: Text(message ?? "No Internet Connection"),
+          ),
+        );
+      }
+      else{
+        log("no mounted");
+      }
+    } catch (e) {
+      log("something went ${e}");
+    }
+  }
 
   /// call this method to display dialog within app
   /// it accepts 3 parameter

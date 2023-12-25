@@ -4,6 +4,7 @@ import 'package:http/http.dart';
 import 'package:http_interceptor/http/http.dart';
 import 'package:http_interceptor/models/models.dart';
 import 'package:marathon/config/environment.dart';
+import 'package:marathon/utils/common_functions.dart';
 import 'dart:convert';
 
 import 'package:marathon/utils/network/http_status_code_interceptor.dart';
@@ -28,10 +29,11 @@ class ApiBaseHelper {
 
       return response;
     } on SocketException {
-      rethrow;
+      CommonFunctions.showRetrySnackbar();
     } catch (e) {
       rethrow;
     }
+    return null;
   }
 
   static Future<Response?> httpPostRequest(String requestUrl, {required Map<dynamic, dynamic> payload}) async {
@@ -43,10 +45,11 @@ class ApiBaseHelper {
 
       return response;
     } on SocketException {
-      rethrow;
+      CommonFunctions.showRetrySnackbar();
     } catch (e) {
       rethrow;
     }
+    return null;
   }
 
   static Future<Response?> httpMultiPartRequest(String requestUrl, {required Map<String, dynamic> payload, required List<MultipartFile> files, String requestType = "POST"}) async {
@@ -71,10 +74,11 @@ class ApiBaseHelper {
 
       return response;
     } on SocketException {
-      rethrow;
+      CommonFunctions.showRetrySnackbar();
     } catch (e) {
       rethrow;
     }
+    return null;
   }
 
   static Future<Response?> httpPatchRequest(String requestUrl, {required Map<dynamic, dynamic> payload}) async {
@@ -86,37 +90,10 @@ class ApiBaseHelper {
 
       return response;
     } on SocketException {
-      rethrow;
+      CommonFunctions.showRetrySnackbar();
     } catch (e) {
       rethrow;
     }
-  }
-
-  static Future httpGetRequestForRefreshToken(String requestUrl) async {
-    try {
-      var header = await _authorizationRefreshToken();
-      Response response = await get(
-        Uri.parse('${Environment.baseUrl}$requestUrl'),
-        headers: header,
-      );
-      if (response.statusCode == HttpStatus.ok) {
-        //TODO : set access token
-      }
-
-      return response;
-    } catch (e) {}
-  }
-
-  static Future<Map<String, String>> _authorizationRefreshToken() async {
-    //TODO : set access token
-    String token = "";
-    String refreshToken = "";
-
-    return {
-      "content-type": "application/json; charset=utf-8",
-      "accept": "application/json",
-      'Authorization': 'Bearer $token',
-      'refresh-token': refreshToken,
-    };
+    return null;
   }
 }
