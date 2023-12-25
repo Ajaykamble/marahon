@@ -29,8 +29,8 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   startTracking() async {
-    int status = await LocationService.locationServiceInstance.checkPermission(context);
     int battery = await PermissionService().enableBatteryOptimization(context);
+    int status = await LocationService.locationServiceInstance.checkPermission(context);
     if (status == 1 && context.mounted && battery == 1) {
       _backgroundServiceProvider.startService();
     }
