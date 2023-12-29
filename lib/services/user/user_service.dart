@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'package:http/http.dart';
+import 'package:marathon/Models/tracking_model.dart';
 import 'package:marathon/Models/user_model.dart';
 import 'package:marathon/services/user/i_user_service.dart';
 import 'package:marathon/utils/app_endpoints.dart';
@@ -38,6 +39,42 @@ class UserService extends IUserService {
         "longitude": longitude,
       };
       Response? response = await ApiBaseHelper.httpPostRequest(AppEndpoints.trackDetails, payload: payload);
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  @override
+  Future<List<TrackingModel>> getTrackDetails({required String userId, required String marathonID}) async {
+    try {
+      Map<String, dynamic> payload = {
+        "userId": userId,
+        "marathonId": marathonID,
+      };
+      Response? response = await ApiBaseHelper.httpPostRequest(AppEndpoints.getTrackDetails, payload: payload);
+      if (response != null) {
+        return trackingModelFromJson(response.body);
+      } else {
+        return [];
+      }
+    } catch (e) {
+      rethrow;
+    }
+  }
+  @override
+  Future<List<TrackingModel>> getTrackPathDetails({required String userId, required String marathonID,required String trackingId}) async {
+    try {
+      Map<String, dynamic> payload = {
+        "userId": userId,
+        "marathonId": marathonID,
+        "trackingId":trackingId
+      };
+      Response? response = await ApiBaseHelper.httpPostRequest(AppEndpoints.getTrackPathDetails, payload: payload);
+      if (response != null) {
+        return trackingModelFromJson(response.body);
+      } else {
+        return [];
+      }
     } catch (e) {
       rethrow;
     }

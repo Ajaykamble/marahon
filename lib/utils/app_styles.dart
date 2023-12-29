@@ -29,7 +29,7 @@ class AppStyles {
 
   static const TextStyle caption = TextStyle(fontSize: 10, fontWeight: FontWeight.w400, color: AppColorScheme.kPrimaryColor);
   static TextStyle captionMedium = const TextStyle(fontSize: 12, fontWeight: FontWeight.w700, color: AppColorScheme.kPrimaryColor);
-  static TextStyle subTitleSmall = const TextStyle(fontSize: 12, fontWeight: FontWeight.w400, color: AppColorScheme.kPrimaryColor);
+  static const TextStyle subTitleSmall =  TextStyle(fontSize: 12, fontWeight: FontWeight.w400, color: AppColorScheme.kPrimaryColor);
 
   static TextStyle headlineMedium = const TextStyle(fontSize: 20, fontWeight: FontWeight.w600, color: AppColorScheme.kPrimaryColor);
 

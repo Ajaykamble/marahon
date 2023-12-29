@@ -20,6 +20,8 @@ class UserProvider extends ChangeNotifier {
   ApiStatus get signInStatus => _apiStatus;
   UserModel? get userDetail => _userDetail;
 
+  String? get userid => _userDetail?.userid;
+
   set signInStatus(ApiStatus status) {
     _apiStatus = status;
     notifyListeners();

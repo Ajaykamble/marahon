@@ -44,6 +44,7 @@ class BackgroundService extends ChangeNotifier {
       androidConfiguration: AndroidConfiguration(
         onStart: onStart,
         autoStart: false,
+        autoStartOnBoot: false,
         isForegroundMode: true,
         notificationChannelId: NotificationService.TRACKING_NOTIFICATION_CHANNEL_ID,
         initialNotificationTitle: AppConstant.APP_NAME,

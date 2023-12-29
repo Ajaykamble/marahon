@@ -64,10 +64,11 @@ class AppTheme {
           hintStyle: AppStyles.hintStyle,
           errorStyle: AppStyles.errorStyle,
         ),
-        appBarTheme: const AppBarTheme(
+        appBarTheme:  AppBarTheme(
           systemOverlayStyle: SystemUiOverlayStyle.light,
-          color: Colors.white,
+          color: AppColorScheme.kPrimaryColor,
           elevation: 0,
+          titleTextStyle: AppStyles.bodyMedium.copyWith(color: Colors.white),
         ),
         textButtonTheme: TextButtonThemeData(
           style: TextButtonThemeStyle(
