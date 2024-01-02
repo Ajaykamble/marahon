@@ -5,6 +5,7 @@ import 'package:marathon/utils/app_color_scheme.dart';
 import 'package:marathon/utils/app_styles.dart';
 import 'package:marathon/utils/app_values.dart';
 import 'package:marathon/utils/extensions/date_extension.dart';
+import 'package:marathon/widget/space_widget.dart';
 
 class HomeTrackingCard extends StatefulWidget {
   final TrackingModel model;
@@ -31,6 +32,11 @@ class _HomeTrackingCardState extends State<HomeTrackingCard> {
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            Text(
+              "${(widget.model.distance??0.0).toStringAsFixed(2)} KM",
+              style: AppStyles.titleSmall.copyWith(color: AppColorScheme.kGrayColor.shade800),
+            ),
+            const SpaceWidget(height: 10),
             Text(
               DateFormat(AppValues.dateFormat).format(widget.model.createdAt ?? DateTime.now()),
               style: AppStyles.titleSmall.copyWith(color: AppColorScheme.kGrayColor.shade800),

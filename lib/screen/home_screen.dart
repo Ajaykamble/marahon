@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_activity_recognition/flutter_activity_recognition.dart';
 import 'package:marathon/Models/tracking_model.dart';
 import 'package:marathon/screen/route_path_screen.dart';
 import 'package:marathon/screen/widgets/home_tracking_card.dart';
@@ -39,11 +40,13 @@ class _HomeScreenState extends State<HomeScreen> {
 
     WidgetsBinding.instance!.addPostFrameCallback((_) {
       loadData();
+      
     });
   }
 
   startTracking() async {
     int battery = await PermissionService().enableBatteryOptimization(context);
+    int battery1 = await PermissionService().enableActivityRecognization(context);
     int status = await LocationService.locationServiceInstance.checkPermission(context);
     if (status == 1 && context.mounted && battery == 1) {
       _backgroundServiceProvider.startService();

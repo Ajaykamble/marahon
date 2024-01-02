@@ -38,4 +38,37 @@ class PermissionService {
       return 1;
     }
   }
+
+  Future<int> enableActivityRecognization(BuildContext context) async {
+    if (Platform.isAndroid) {
+      bool status = await Permission.activityRecognition.isGranted;
+
+      if (status) {
+        return 1;
+      } else {
+        PermissionStatus permissionStatus = await Permission.activityRecognition.request();
+        if (permissionStatus == PermissionStatus.granted) {
+          return 1;
+        } else {
+          int? result = await CommonFunctions.openDialog(
+            context: context,
+            action: (context) {
+              
+              Navigator.pop(context, 0);
+            },
+            subtitle: "We need to disable battery optimization for this app to work properly",
+            buttonText: "Open Settings",
+            title: "Alert",
+            buttonCancelText: "Not Now",
+            onCancelAction: (context) {
+              Navigator.pop(context, -1);
+            },
+          );
+          return result ?? -1;
+        }
+      }
+    } else {
+      return 1;
+    }
+  }
 }

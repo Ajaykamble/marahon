@@ -5,6 +5,7 @@ import 'dart:ui';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_activity_recognition/flutter_activity_recognition.dart';
 import 'package:flutter_background_service/flutter_background_service.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:geolocator/geolocator.dart';
@@ -25,17 +26,37 @@ import 'package:provider/provider.dart';
 
 @pragma('vm:entry-point')
 void onStart(ServiceInstance service) async {
+  log("ONSTART");
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
   await LocalDbService().init();
-  service.on("stop").listen((event) async {
-    await service.stopSelf();
+
+  final activityRecognition = FlutterActivityRecognition.instance;
+
+  StreamSubscription<Activity> activityStream = activityRecognition.activityStream.listen((event) async {
+    log("EVENT CHANGED ${event.type.name} ${event.confidence.name}");
+    bool isLoggedIn = LocalDbService.db.isSignedIn();
+    if (isLoggedIn) {
+      String? trackingId = LocalDbService.db.getDetails(AppConstant.TRACKING_ID);
+      String? userId = UserProvider().userDetail?.userid;
+      String marathonId = "1";
+      if (trackingId != null && userId != null) {
+        try {
+          await UserService().trackActivity(userId: userId, trackingId: trackingId, marathonId: marathonId, activity: event.type.name);
+        } catch (e) {
+          log("error: $e");
+        }
+      }
+    }
   });
 
-  Timer.periodic(const Duration(seconds: 10), (timer) async {
-    Position position = await Geolocator.getCurrentPosition();
+  StreamSubscription<Position> positionStream = Geolocator.getPositionStream(
+      locationSettings: LocationSettings(
+    accuracy: LocationAccuracy.high,
+    distanceFilter: 1,
+  )).listen((Position position) async {
     log("message: ${position.latitude} ${position.longitude}");
     bool isLoggedIn = LocalDbService.db.isSignedIn();
     if (isLoggedIn) {
@@ -57,6 +78,35 @@ void onStart(ServiceInstance service) async {
       }
     }
   });
+  service.on("stop").listen((event) async {
+    await service.stopSelf();
+    positionStream.cancel();
+    activityStream.cancel();
+  });
+
+  /* Timer.periodic(const Duration(seconds: 10), (timer) async {
+    Position position = await Geolocator.getCurrentPosition();
+    log("message: ${position.latitude} ${position.longitude}");
+    bool isLoggedIn = LocalDbService.db.isSignedIn();
+    if (isLoggedIn) {
+      String? trackingId = LocalDbService.db.getDetails(AppConstant.TRACKING_ID);
+      String? userId = UserProvider().userDetail?.userid;
+      String marathonId = "1";
+      if (trackingId != null && userId != null) {
+        try {
+          await UserService().trackLocation(
+            userId: userId,
+            trackingId: trackingId,
+            marathonId: marathonId,
+            latitude: position.latitude,
+            longitude: position.longitude,
+          );
+        } catch (e) {
+          log("error: $e");
+        }
+      }
+    }
+  }); */
 }
 
 Future<void> main() async {

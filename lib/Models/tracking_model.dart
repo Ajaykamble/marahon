@@ -13,27 +13,32 @@ List<TrackingModel> trackingModelFromJson(String str) => List<TrackingModel>.fro
 String trackingModelToJson(List<TrackingModel> data) => json.encode(List<dynamic>.from(data.map((x) => x.toJson())));
 
 class TrackingModel {
-    String? id;
-    String? userid;
-    String? trackingid;
-    String? marathonid;
-    String? lat;
-    String? lon;
-    DateTime? createdAt;
-    String? activity;
+  String? id;
+  String? userid;
+  String? trackingid;
+  String? marathonid;
+  String? lat;
+  String? lon;
+  DateTime? createdAt;
+  String? activity;
+  double? distance;
 
-    TrackingModel({
-        this.id,
-        this.userid,
-        this.trackingid,
-        this.marathonid,
-        this.lat,
-        this.lon,
-        this.createdAt,
-        this.activity,
-    });
+  TrackingModel({this.id, this.userid, this.trackingid, this.marathonid, this.lat, this.lon, this.createdAt, this.activity, this.distance});
 
-    factory TrackingModel.fromJson(Map<String, dynamic> json) => TrackingModel(
+  static toDoubleVal(var distance) {
+    if(distance==null){
+      return 0.0;
+    }
+    if(distance is double){
+      return distance;
+    }
+    if(distance is int){
+      return distance.toDouble();
+    }
+    return 0.0;
+  }
+
+  factory TrackingModel.fromJson(Map<String, dynamic> json) => TrackingModel(
         id: json["id"],
         userid: json["userid"],
         trackingid: json["trackingid"],
@@ -42,9 +47,10 @@ class TrackingModel {
         lon: json["lon"],
         createdAt: json["createdAt"] == null ? null : DateTime.parse(json["createdAt"]).add(DateTime.now().timeZoneOffset),
         activity: json["activity"],
-    );
+        distance: toDoubleVal(json["distance"]),
+      );
 
-    Map<String, dynamic> toJson() => {
+  Map<String, dynamic> toJson() => {
         "id": id,
         "userid": userid,
         "trackingid": trackingid,
@@ -53,5 +59,6 @@ class TrackingModel {
         "lon": lon,
         "createdAt": createdAt?.toIso8601String(),
         "activity": activity,
-    };
+        "distance":distance,
+      };
 }

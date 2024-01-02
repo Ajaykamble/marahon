@@ -43,6 +43,25 @@ class UserService extends IUserService {
       rethrow;
     }
   }
+  @override
+  Future<void> trackActivity({
+    required String userId,
+    required String trackingId,
+    required String marathonId,
+    required String activity,
+  }) async {
+    try {
+      Map<String, dynamic> payload = {
+        "trackingId": trackingId,
+        "userId": userId,
+        "marathonId": marathonId,
+        "activity": activity,
+      };
+      Response? response = await ApiBaseHelper.httpPostRequest(AppEndpoints.activityDetails, payload: payload);
+    } catch (e) {
+      rethrow;
+    }
+  }
 
   @override
   Future<List<TrackingModel>> getTrackDetails({required String userId, required String marathonID}) async {
