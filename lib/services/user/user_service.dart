@@ -29,6 +29,7 @@ class UserService extends IUserService {
     required String marathonId,
     required double latitude,
     required double longitude,
+    required String trackingType,
   }) async {
     try {
       Map<String, dynamic> payload = {
@@ -37,6 +38,7 @@ class UserService extends IUserService {
         "marathonId": marathonId,
         "latitude": latitude,
         "longitude": longitude,
+        "trackingType": trackingType,
       };
       Response? response = await ApiBaseHelper.httpPostRequest(AppEndpoints.trackDetails, payload: payload);
     } catch (e) {
@@ -49,6 +51,7 @@ class UserService extends IUserService {
     required String trackingId,
     required String marathonId,
     required String activity,
+    required String trackingType,
   }) async {
     try {
       Map<String, dynamic> payload = {
@@ -56,6 +59,7 @@ class UserService extends IUserService {
         "userId": userId,
         "marathonId": marathonId,
         "activity": activity,
+        "trackingType": trackingType,
       };
       Response? response = await ApiBaseHelper.httpPostRequest(AppEndpoints.activityDetails, payload: payload);
     } catch (e) {

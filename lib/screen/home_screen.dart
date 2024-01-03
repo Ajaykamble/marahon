@@ -30,6 +30,15 @@ class _HomeScreenState extends State<HomeScreen> {
   late BackgroundService _backgroundServiceProvider;
   late HomeProvider _homeProvider;
 
+
+String dropdownvalue = "Select Type";  
+var items = [    
+    'Select Type',
+    'Walking',
+    'Running',
+    'Cycling',
+  ];
+
   @override
   void initState() {
     super.initState();
@@ -40,7 +49,6 @@ class _HomeScreenState extends State<HomeScreen> {
 
     WidgetsBinding.instance!.addPostFrameCallback((_) {
       loadData();
-      
     });
   }
 
@@ -49,7 +57,8 @@ class _HomeScreenState extends State<HomeScreen> {
     int battery1 = await PermissionService().enableActivityRecognization(context);
     int status = await LocationService.locationServiceInstance.checkPermission(context);
     if (status == 1 && context.mounted && battery == 1) {
-      _backgroundServiceProvider.startService();
+      
+      _backgroundServiceProvider.startService(dropdownvalue);
     }
   }
 
@@ -70,6 +79,52 @@ class _HomeScreenState extends State<HomeScreen> {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
+              
+                    DropdownButtonFormField<String>(
+                    
+                          decoration: InputDecoration(
+                            contentPadding: EdgeInsets.fromLTRB(
+                                10.0, 10.0, 20.0, 10.0),
+                            border: OutlineInputBorder(
+                                borderRadius:
+                                    BorderRadius.circular(
+                                        10.0)),
+                          ),
+                    // Initial Value
+                    value: dropdownvalue,
+                    
+                    // Down Arrow Icon
+                    icon: const Icon(Icons.keyboard_arrow_down), 
+                    // Array list of items
+                    items: items.map((String items) {
+                      return DropdownMenuItem(
+                        value: items,
+                        child: Text(items),
+                      );
+                    }).toList(),
+                    // After selecting the desired option,it will
+                    // change button value to selected value
+                    onChanged: (String? newValue) { 
+                      setState(() {
+                        dropdownvalue = newValue!;
+                      });
+                      },
+                    ),
+            Selector<BackgroundService, Tuple2<ApiStatus, bool>>(
+              selector: (context, provider) => Tuple2(provider.trackingStatus, provider.isServiceRunning),
+              builder: (context, _, __) {
+                return SizedBox(
+                  width: double.infinity,
+                  child: PrimaryFilledButton(
+                    buttonTitle: _backgroundServiceProvider.isServiceRunning ? "Stop Tracking" : "Start Tracking",
+                    onPressed: startTracking,
+                    isLoading: _backgroundServiceProvider.trackingStatus == ApiStatus.LOADING,
+                  ),
+                );
+              },
+            ),
+             Divider(),
+                   Divider(),
             Expanded(
               child: Selector<HomeProvider, Tuple3<ApiStatus, int, List<TrackingModel>>>(
                 selector: (context, provider) => Tuple3(provider.getTrackingStatus, provider.userTrackList.length, provider.userTrackList),
@@ -104,19 +159,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 },
               ),
             ),
-            Selector<BackgroundService, Tuple2<ApiStatus, bool>>(
-              selector: (context, provider) => Tuple2(provider.trackingStatus, provider.isServiceRunning),
-              builder: (context, _, __) {
-                return SizedBox(
-                  width: double.infinity,
-                  child: PrimaryFilledButton(
-                    buttonTitle: _backgroundServiceProvider.isServiceRunning ? "Stop Tracking" : "Start Tracking",
-                    onPressed: startTracking,
-                    isLoading: _backgroundServiceProvider.trackingStatus == ApiStatus.LOADING,
-                  ),
-                );
-              },
-            ),
+                
           ],
         ),
       ),

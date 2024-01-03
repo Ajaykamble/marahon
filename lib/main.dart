@@ -40,11 +40,12 @@ void onStart(ServiceInstance service) async {
     bool isLoggedIn = LocalDbService.db.isSignedIn();
     if (isLoggedIn) {
       String? trackingId = LocalDbService.db.getDetails(AppConstant.TRACKING_ID);
+      String? trackingType = LocalDbService.db.getDetails(AppConstant.TRACKING_TYPE);
       String? userId = UserProvider().userDetail?.userid;
       String marathonId = "1";
-      if (trackingId != null && userId != null) {
+      if (trackingId != null && userId != null && trackingType != null) {
         try {
-          await UserService().trackActivity(userId: userId, trackingId: trackingId, marathonId: marathonId, activity: event.type.name);
+          await UserService().trackActivity(userId: userId, trackingId: trackingId, marathonId: marathonId, activity: event.type.name, trackingType: trackingType);
         } catch (e) {
           log("error: $e");
         }
@@ -61,9 +62,10 @@ void onStart(ServiceInstance service) async {
     bool isLoggedIn = LocalDbService.db.isSignedIn();
     if (isLoggedIn) {
       String? trackingId = LocalDbService.db.getDetails(AppConstant.TRACKING_ID);
+      String? trackingType = LocalDbService.db.getDetails(AppConstant.TRACKING_TYPE);
       String? userId = UserProvider().userDetail?.userid;
       String marathonId = "1";
-      if (trackingId != null && userId != null) {
+      if (trackingId != null && userId != null && trackingType != null) {
         try {
           await UserService().trackLocation(
             userId: userId,
@@ -71,6 +73,7 @@ void onStart(ServiceInstance service) async {
             marathonId: marathonId,
             latitude: position.latitude,
             longitude: position.longitude,
+            trackingType: trackingType,
           );
         } catch (e) {
           log("error: $e");

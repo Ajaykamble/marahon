@@ -22,8 +22,9 @@ class TrackingModel {
   DateTime? createdAt;
   String? activity;
   double? distance;
+  String? trackingtype;
 
-  TrackingModel({this.id, this.userid, this.trackingid, this.marathonid, this.lat, this.lon, this.createdAt, this.activity, this.distance});
+  TrackingModel({this.id, this.userid, this.trackingid, this.marathonid, this.lat, this.lon, this.createdAt, this.activity, this.distance, this.trackingtype});
 
   static toDoubleVal(var distance) {
     if(distance==null){
@@ -48,6 +49,8 @@ class TrackingModel {
         createdAt: json["createdAt"] == null ? null : DateTime.parse(json["createdAt"]).add(DateTime.now().timeZoneOffset),
         activity: json["activity"],
         distance: toDoubleVal(json["distance"]),
+        trackingtype: json["trackingtype"],
+        
       );
 
   Map<String, dynamic> toJson() => {

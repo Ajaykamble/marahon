@@ -56,7 +56,7 @@ class BackgroundService extends ChangeNotifier {
     _isServiceRunning = await service.isRunning();
   }
 
-  Future<String?> startService() async {
+  Future<String?> startService(String dropdownvalue) async {
     trackingStatus = ApiStatus.LOADING;
     String? message;
     bool? hasNotificationPermission = await NotificationService.notificationServiceService.requestPermission();
@@ -68,7 +68,7 @@ class BackgroundService extends ChangeNotifier {
         String trackingId = uuid.v4();
         log("Tracking Id: $trackingId");
         LocalDbService.db.saveDetails(AppConstant.TRACKING_ID, trackingId);
-
+        LocalDbService.db.saveDetails(AppConstant.TRACKING_TYPE, dropdownvalue);
         await service.startService();
         await Wakelock.enable();
         isServiceRunning = true;
