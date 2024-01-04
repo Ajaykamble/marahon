@@ -89,8 +89,12 @@ class LocationService {
   Future<int> checkPermission(
     BuildContext context,
   ) async {
+    
+    bool isLocationServiceEnabled = await Geolocator.isLocationServiceEnabled();
+    log("**${isLocationServiceEnabled}");
     /// checks the status of location from [PermissionService] class
     LocationPermission initialStatus = await Geolocator.checkPermission();
+    log("${initialStatus}");
     if (initialStatus != LocationPermission.always) {
       if (context.mounted) {
         var result = await CommonFunctions.openDialog(

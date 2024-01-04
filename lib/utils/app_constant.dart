@@ -18,5 +18,6 @@ class AppConstant {
   
   //shared preference keys
   static const String TRACKING_ID = "trackingId";
+  static const String TRACKING_TYPE = "trackingType";
 
 }
