@@ -67,8 +67,8 @@ class BackgroundService extends ChangeNotifier {
         Uuid uuid = Uuid();
         String trackingId = uuid.v4();
         log("Tracking Id: $trackingId");
-        LocalDbService.db.saveDetails(AppConstant.TRACKING_ID, trackingId);
-        LocalDbService.db.saveDetails(AppConstant.TRACKING_TYPE, dropdownvalue);
+        await LocalDbService.db.saveDetails(AppConstant.TRACKING_ID, trackingId);
+        await LocalDbService.db.saveDetails(AppConstant.TRACKING_TYPE, dropdownvalue);
         await service.startService();
         await Wakelock.enable();
         isServiceRunning = true;

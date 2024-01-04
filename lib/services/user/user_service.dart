@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:developer';
 
 import 'package:http/http.dart';
@@ -40,8 +41,11 @@ class UserService extends IUserService {
         "longitude": longitude,
         "trackingType": trackingType,
       };
+      log("${jsonEncode(payload)}");
       Response? response = await ApiBaseHelper.httpPostRequest(AppEndpoints.trackDetails, payload: payload);
+      
     } catch (e) {
+      log(e.toString());
       rethrow;
     }
   }
@@ -63,6 +67,7 @@ class UserService extends IUserService {
       };
       Response? response = await ApiBaseHelper.httpPostRequest(AppEndpoints.activityDetails, payload: payload);
     } catch (e) {
+      log(e.toString());
       rethrow;
     }
   }

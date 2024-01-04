@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:marathon/Models/tracking_model.dart';
+import 'package:marathon/utils/app_assets.dart';
 import 'package:marathon/utils/app_color_scheme.dart';
 import 'package:marathon/utils/app_styles.dart';
 import 'package:marathon/utils/app_values.dart';
@@ -17,6 +18,22 @@ class HomeTrackingCard extends StatefulWidget {
 }
 
 class _HomeTrackingCardState extends State<HomeTrackingCard> {
+  String getImagePath() {
+    if (widget.model.trackingtype == null) {
+      return AppAssets.icActicityRun;
+    } else {
+      switch (widget.model.trackingtype) {
+        case 'Walking':
+          return AppAssets.icActicityWalk;
+        case 'Cycling':
+          return AppAssets.icActicityCycling;
+        case 'Running':
+        default:
+          return AppAssets.icActicityRun;
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return InkWell(
@@ -28,18 +45,34 @@ class _HomeTrackingCardState extends State<HomeTrackingCard> {
           borderRadius: BorderRadius.circular(10),
         ),
         padding: EdgeInsets.all(AppValues.kCardPadding),
-        child: Column(
+        child: Row(
           mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            Text(
-              "${(widget.model.distance??0.0).toStringAsFixed(2)} KM",
-              style: AppStyles.titleSmall.copyWith(color: AppColorScheme.kGrayColor.shade800),
+            Container(
+                width: 40, height: 40, child: Image.asset(getImagePath())),
+            const SpaceWidget(
+              width: 10,
             ),
-            const SpaceWidget(height: 10),
-            Text(
-              DateFormat(AppValues.dateFormat).format(widget.model.createdAt ?? DateTime.now()),
-              style: AppStyles.titleSmall.copyWith(color: AppColorScheme.kGrayColor.shade800),
+            Expanded(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    "${(widget.model.distance ?? 0.0).toStringAsFixed(2)} KM",
+                    style: AppStyles.titleSmall
+                        .copyWith(color: AppColorScheme.kGrayColor.shade800),
+                  ),
+                  const SpaceWidget(height: 10),
+                  Text(
+                    DateFormat(AppValues.dateFormat)
+                        .format(widget.model.createdAt ?? DateTime.now()),
+                    style: AppStyles.titleSmall
+                        .copyWith(color: AppColorScheme.kGrayColor.shade800),
+                  ),
+                ],
+              ),
             ),
           ],
         ),

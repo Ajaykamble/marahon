@@ -51,6 +51,7 @@ void onStart(ServiceInstance service) async {
         }
       }
     }
+    
   });
 
   StreamSubscription<Position> positionStream = Geolocator.getPositionStream(
@@ -66,6 +67,7 @@ void onStart(ServiceInstance service) async {
       String? userId = UserProvider().userDetail?.userid;
       String marathonId = "1";
       if (trackingId != null && userId != null && trackingType != null) {
+        log(trackingType + " RLPZA");
         try {
           await UserService().trackLocation(
             userId: userId,
@@ -80,6 +82,7 @@ void onStart(ServiceInstance service) async {
         }
       }
     }
+    
   });
   service.on("stop").listen((event) async {
     await service.stopSelf();
@@ -139,6 +142,8 @@ class MyApp extends StatelessWidget {
         builder: (context) {
           return MaterialApp(
             title: 'Marathon',
+            debugShowCheckedModeBanner: false,
+            
             theme: AppTheme.light(context),
             darkTheme: AppTheme.light(context),
             themeMode: ThemeMode.light,

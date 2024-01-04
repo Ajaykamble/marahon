@@ -63,5 +63,6 @@ class TrackingModel {
         "createdAt": createdAt?.toIso8601String(),
         "activity": activity,
         "distance":distance,
+        "trackingtype": trackingtype,
       };
 }

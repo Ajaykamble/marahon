@@ -72,7 +72,7 @@ class _RoutePathScreenState extends State<RoutePathScreen> {
                   openStreetMapTileLayer,
                   PolylineLayer(
                     polylines: [
-                      Polyline(points: _homeProvider.latLonList, color: AppColorScheme.kPrimaryColor, strokeWidth: 2.0, strokeJoin: StrokeJoin.round),
+                      Polyline(points: _homeProvider.latLonList, color: AppColorScheme.kPrimaryColor, strokeWidth: 5.0, strokeJoin: StrokeJoin.round),
                     ],
                   ),
                   MarkerLayer(
